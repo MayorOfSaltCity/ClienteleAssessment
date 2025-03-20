@@ -17,7 +17,7 @@ This task involves creating a C# program that uses multiple threads to calculate
 
 ### Features:
 - Utilizes **multiple threads** to calculate the factorial of different numbers.
-- Ensures **thread safety** and **proper synchronization** using locking mechanisms (e.g., `lock` keyword, `Monitor`).
+- Ensures **thread safety** and **proper synchronization** using semaphores and asyncrhonous processing
 - Handles concurrent processing efficiently.
 
 ### Instructions to Validate:
@@ -29,7 +29,7 @@ This task involves creating a C# program that uses multiple threads to calculate
        dotnet test
        ```
 
-2. **Console Application**: The console application is provided to demonstrate the multithreading behavior. To run it:
+2. **Console Application**: The console application is provided to demonstrate the input/output. To run it:
    - Navigate to the project directory.
    - Execute the program using:
      ```bash
@@ -73,10 +73,6 @@ This task involves writing a C# console application that consumes a **public RES
 - Consumes a **public REST API** (OpenWeatherMap).
 - Fetches **current weather data** for a specified city.
 - Displays data such as temperature, weather description, humidity, etc.
-
-### Instructions to Validate:
-1. **API Key**: To use the **OpenWeatherMap API**, you must obtain a free API key. You can get it [here](https://openweathermap.org/api).
-   - Replace `your_api_key` in the application with the actual API key.
 
 2. **Running the Application**:
    - Open the solution in **Visual Studio** or use the **dotnet CLI**.
