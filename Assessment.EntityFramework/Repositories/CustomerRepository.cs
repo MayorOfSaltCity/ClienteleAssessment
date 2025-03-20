@@ -1,7 +1,7 @@
 ﻿using Assessment.EntityFramework.Models;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
-namespace Assessment.EntityFramework.Services
+namespace Assessment.EntityFramework.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
@@ -17,6 +17,11 @@ namespace Assessment.EntityFramework.Services
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
             return customer;
+        }
+
+        public Task<bool> CustomerExists(int id)
+        {
+            return _context.Customers.AnyAsync(c => c.Id == id);
         }
 
         public async Task DeleteCustomerAsync(int id)

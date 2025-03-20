@@ -1,7 +1,7 @@
 ﻿using Assessment.EntityFramework.Models;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
-namespace Assessment.EntityFramework.Services
+namespace Assessment.EntityFramework.Repositories
 {
     public class AddressRepository : IAddressRepository
     {

@@ -9,5 +9,6 @@ namespace Assessment.EntityFramework.Services
         Task<Customer> CreateCustomerAsync(Customer customer);
         Task<Customer> UpdateCustomerAsync(Customer customer);
         Task DeleteCustomerAsync(int id);
+        Task<bool> CustomerExists(int id);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Assessment.EntityFramework.Models;
+using Assessment.EntityFramework.Repositories;
 
 namespace Assessment.EntityFramework.Services
 {
@@ -24,10 +25,15 @@ namespace Assessment.EntityFramework.Services
             return await customerRepository.CreateCustomerAsync(customer);
         }
 
-        public Task DeleteCustomerAsync(int id)
+        public async Task<bool> CustomerExists(int id)
+        {
+            return await customerRepository.CustomerExists(id);
+        }
+
+        public async Task DeleteCustomerAsync(int id)
         {
             // delete the customer
-            return customerRepository.DeleteCustomerAsync(id);
+            await customerRepository.DeleteCustomerAsync(id);
         }
 
         public Task<Customer> GetCustomerAsync(int id)

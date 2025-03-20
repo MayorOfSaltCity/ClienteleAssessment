@@ -1,6 +1,6 @@
 ﻿using Assessment.EntityFramework.Models;
 
-namespace Assessment.EntityFramework.Services
+namespace Assessment.EntityFramework.Repositories
 {
     public interface IAddressRepository
     {

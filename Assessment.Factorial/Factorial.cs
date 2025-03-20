@@ -28,10 +28,16 @@ namespace Assessment.Factorial
 
         public static async Task<int> FactorialOfAsync(int number)
         {
-            if (number <= 0)
+            if (number < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(number), "Number must be greater than or equal to 0");
+            }
+
+            if (number == 0)
             {
                 return 1;
             }
+
             return number * await FactorialOfAsync(number - 1);
         }
     }

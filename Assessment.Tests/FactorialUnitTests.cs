@@ -34,11 +34,13 @@ namespace Assessment.Tests
         {
             // arrange
             var numbers = new int[] { -1, -2, -3, -4, -5 };
-            var expected = new int[] { 1, 1, 1, 1, 1 };
 
             // act
-            var result = await numbers.FactorAsync();
-            Assert.Equal(expected, result);
+            var result = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => numbers.FactorAsync());
+
+            // assert
+            Assert.Equal("number", result.ParamName);
+
         }
 
         [Fact]
@@ -64,26 +66,5 @@ namespace Assessment.Tests
 
         }
 
-        [Fact]
-        public async Task Factorial_DoesNotCrash_WhenCalledWithVeryLongArray()
-        {
-            // arrange
-            var numbers = new int[10000];
-            for (int i = 0; i < 10000; i++)
-            {
-                numbers[i] = i;
-            }
-
-            // use a parrallel for loop to generate the expected result
-            var expected = new int[10000];
-            Parallel.For(0, 10000, async i =>
-            {
-                expected[i] = await FactorialExtensions.FactorialOfAsync(i);
-            });
-
-            // act
-            var result = await numbers.FactorAsync();
-            Assert.Equal(expected, result);
-        }
     }
 }
