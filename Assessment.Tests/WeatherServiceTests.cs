@@ -16,13 +16,16 @@ namespace Assessment.Tests
         [Fact]
         public async Task GetWeather_ReturnsWeatherData_ForValidCity()
         {
+            var mainWeatherData = new MainWeatherData
+            {
+                Temperature = 20,
+                Humidity = 50,
+                GroundLevelPressure = 10
+            };
             // Arrange
             var weatherData = new WeatherData
             {
-                City = "London",
-                Temperature = 20,
-                Humidity = 50,
-                WindSpeed = 10
+                MainWeatherData = mainWeatherData,
             };
 
             WeatherRepository.Setup(x => x.GetWeatherAsync("London")).ReturnsAsync(weatherData);
@@ -31,10 +34,10 @@ namespace Assessment.Tests
             var result = await WeatherService.GetWeatherAsync("London");
 
             Assert.NotNull(result);
-            Assert.Equal(weatherData.City, result.City);
-            Assert.Equal(weatherData.Temperature, result.Temperature);
-            Assert.Equal(weatherData.Humidity, result.Humidity);
-            Assert.Equal(weatherData.WindSpeed, result.WindSpeed);
+            Assert.Equal(20, result.MainWeatherData.Temperature);
+            Assert.Equal(50, result.MainWeatherData.Humidity);
+            Assert.Equal(10, result.MainWeatherData.GroundLevelPressure);
+
 
         }
         protected Mock<IWeatherRepository> WeatherRepository => weatherRepository ??= new Mock<IWeatherRepository>();

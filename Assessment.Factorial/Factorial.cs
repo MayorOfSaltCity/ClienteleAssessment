@@ -10,13 +10,13 @@ namespace Assessment.Factorial
     public static class FactorialExtensions
     {
         // declare a semaphore with a maximum count of 5
-        private static readonly SemaphoreSlim semaphore = new SemaphoreSlim(5);
+        private static readonly SemaphoreSlim semaphore = new SemaphoreSlim(10);
 
         public static async Task<int[]> FactorAsync(this int[] numbers)
         {
-            await semaphore.WaitAsync();
             try
             {
+                await semaphore.WaitAsync();
                 var tasks = numbers.Select(FactorialOfAsync).ToArray();
                 return await Task.WhenAll(tasks);
             }
@@ -28,6 +28,7 @@ namespace Assessment.Factorial
 
         public static async Task<int> FactorialOfAsync(int number)
         {
+
             if (number < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(number), "Number must be greater than or equal to 0");
