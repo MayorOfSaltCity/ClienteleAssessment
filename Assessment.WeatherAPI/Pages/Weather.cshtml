@@ -1,0 +1,26 @@
+﻿@page
+@model Assessment.WeatherAPI.Pages.WeatherModel
+@{
+}
+
+<!-- a search form for the weather -->
+<form method="post">
+    <input type="text" name="city" placeholder="Enter city name" />
+    <button type="submit">Search</button>
+</form>
+
+<div>
+@if (Model.WeatherData != null)
+    {
+        <h2>@Model.WeatherData.Name</h2>
+        <p>Temperature: @Model.WeatherData.MainWeatherData.Temperature</p>
+        <p>Feels like: @Model.WeatherData.MainWeatherData.FeelsLike</p>
+        <p>Humidity: @Model.WeatherData.MainWeatherData.Humidity</p>
+        <p>Wind speed: @Model.WeatherData.WindData.Speed</p>
+        <p>Weather: @Model.WeatherData.WeatherConditions[0].Description</p>
+    }
+    else
+    {
+        <p>City not found</p>
+    }
+</div>

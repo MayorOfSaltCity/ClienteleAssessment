@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Assessment.EntityFramework\Assessment.EntityFramework.csproj" />
     <ProjectReference Include="..\Assessment.Factorial\Assessment.Factorial.csproj" />
+    <ProjectReference Include="..\Assessment.WeatherAPI\Assessment.WeatherAPI.csproj" />
   </ItemGroup>
 
 </Project>
