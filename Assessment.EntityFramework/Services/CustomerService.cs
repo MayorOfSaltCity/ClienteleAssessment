@@ -11,9 +11,9 @@ namespace Assessment.EntityFramework.Services
             if (customer.Address != null)
             {
                 // check if the address is already in the database
-                var address = await addressRepository.GetAddressAsync(customer.Address.Id);
+                var address = await addressRepository.GetAddressAsync(customer.Address.Id) ?? await addressRepository.SearchAddressAsync(customer.Address.SearchString());
                 if (address == null)
-                {
+                {                    
                     // create the address
                     address = await addressRepository.CreateAddressAsync(customer.Address);
                 }

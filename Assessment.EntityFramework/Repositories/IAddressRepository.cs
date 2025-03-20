@@ -9,5 +9,6 @@ namespace Assessment.EntityFramework.Repositories
         Task<Address> CreateAddressAsync(Address address);
         Task<Address> UpdateAddressAsync(Address address);
         Task DeleteAddressAsync(int id);
+        Task<Address?> SearchAddressAsync(string searchString);
     }
 }

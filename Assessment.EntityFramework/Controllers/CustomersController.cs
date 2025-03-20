@@ -20,7 +20,7 @@ namespace Assessment.EntityFramework.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index(int pageSize = 10, int pageNumber = 1)
+        public async Task<IActionResult> Index(int pageSize = 10, int pageNumber = 0)
         {
             var customers = await _customerService.GetCustomersAsync(pageSize, pageNumber);
             return View(customers);
@@ -56,7 +56,7 @@ namespace Assessment.EntityFramework.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Email,Phone,AddressId")] Customer customer)
+        public async Task<IActionResult> Create(Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace Assessment.EntityFramework.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Phone,AddressId")] Customer customer)
+        public async Task<IActionResult> Edit(int id, Customer customer)
         {
             if (id != customer.Id)
             {

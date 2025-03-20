@@ -42,6 +42,7 @@ namespace Assessment.EntityFramework.Repositories
         public async Task<IEnumerable<Customer>> GetCustomersAsync(int pageSize, int pageNumber)
         {
             return await _context.Customers
+                .Include(c => c.Address)
                 .OrderBy(c => c.Id)
                 .Skip(pageSize * pageNumber)
                 .Take(pageSize)

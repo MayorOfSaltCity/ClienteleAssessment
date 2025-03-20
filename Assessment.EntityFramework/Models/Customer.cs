@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace Assessment.EntityFramework.Models
 {
@@ -12,7 +13,7 @@ namespace Assessment.EntityFramework.Models
         public string? Email { get; set; }
         [MaxLength(20),Phone]
         public string? Phone { get; set; }
-        public Address? Address { get; set; }
+        public Address? Address { get; set; } = new Address();
         public int AddressId { get; set; }
     }
 
@@ -28,5 +29,29 @@ namespace Assessment.EntityFramework.Models
         public string? Province { get; set; }
         [MaxLength(10)]
         public string? PostalCode { get; set; }
+
+        public string AsDisplayString
+        {
+            get
+            {
+                // create string builder
+                var sb = new StringBuilder();
+                // append street by line so we get a nicely formatted address
+                sb.AppendLine(Street);
+                // append city
+                sb.AppendLine(City);
+                // append province
+                sb.AppendLine(Province);
+                // append postal code
+                sb.Append(PostalCode);
+                // return the string
+                return sb.ToString();
+            }
+        }
+
+        internal string SearchString()
+        {
+            return string.Concat(new { Street, City, Province, PostalCode });
+        }
     }
 }
