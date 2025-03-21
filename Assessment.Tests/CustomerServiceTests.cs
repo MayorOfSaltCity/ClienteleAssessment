@@ -164,6 +164,169 @@ namespace Assessment.Tests
             CustomerRepository.Verify(x => x.DeleteCustomerAsync(customer.Id), Times.Once);
         }
 
+        [Fact]
+        public async Task CustomerExists_ReturnsTrue_WhenCustomerExists()
+        {
+            // Arrange
+            CustomerRepository.Setup(x => x.CustomerExists(1)).ReturnsAsync(true);
+
+            // Act
+            var result = await CustomerService.CustomerExists(1);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task CustomerExists_ReturnsFalse_WhenCustomerDoesNotExist()
+        {
+            // Arrange
+            CustomerRepository.Setup(x => x.CustomerExists(1)).ReturnsAsync(false);
+
+            // Act
+            var result = await CustomerService.CustomerExists(1);
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task CreateCustomer_ReturnsNull_WhenSaveToDbFails()
+        {
+            // arrange
+            var customer = new Faker<Customer>()
+                .RuleFor(c => c.Id, f => f.IndexFaker)
+                .RuleFor(c => c.Name, f => f.Person.FullName)
+                .RuleFor(c => c.Email, f => f.Person.Email)
+                .RuleFor(c => c.Phone, f => f.Person.Phone)
+                .RuleFor(c => c.Address, f => new Address
+                {
+                    City = f.Address.City(),
+                    PostalCode = f.Address.ZipCode(),
+                    Province = f.Address.State(),
+                    Street = f.Address.StreetAddress()
+                }).Generate();
+
+            AddressRepository.Setup(x => x.GetAddressAsync(customer.Address!.Id)).ReturnsAsync(customer.Address);
+            AddressRepository.Setup(x => x.CreateAddressAsync(customer.Address!)).ReturnsAsync(customer.Address);
+            CustomerRepository.Setup(x => x.CreateCustomerAsync(customer)).ReturnsAsync((Customer)null!);
+
+            // Act
+            var result = await CustomerService.CreateCustomerAsync(customer);
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task CreateCustomer_ReturnsNull_WhenAddressIsNotCreated()
+        {
+            // arrange
+            var customer = new Faker<Customer>()
+                .RuleFor(c => c.Id, f => f.IndexFaker)
+                .RuleFor(c => c.Name, f => f.Person.FullName)
+                .RuleFor(c => c.Email, f => f.Person.Email)
+                .RuleFor(c => c.Phone, f => f.Person.Phone)
+                .RuleFor(c => c.Address, f => new Address
+                {
+                    City = f.Address.City(),
+                    PostalCode = f.Address.ZipCode(),
+                    Province = f.Address.State(),
+                    Street = f.Address.StreetAddress()
+                }).Generate();
+
+            AddressRepository.Setup(x => x.GetAddressAsync(customer.Address!.Id)).ReturnsAsync((Address)null!);
+            AddressRepository.Setup(x => x.CreateAddressAsync(customer.Address!)).ReturnsAsync((Address)null!);
+
+            // Act
+            var result = await Assert.ThrowsAsync<Exception>(() => CustomerService.CreateCustomerAsync(customer));
+            Assert.NotNull(result);
+            Assert.Equal("Failed to create address", result.Message);
+
+        }
+
+        [Fact]
+        public async Task UpdateCustomer_ReturnsNull_WhenSaveToDbFails()
+        {
+            // arrange
+            var customer = new Faker<Customer>()
+                .RuleFor(c => c.Id, f => f.IndexFaker)
+                .RuleFor(c => c.Name, f => f.Person.FullName)
+                .RuleFor(c => c.Email, f => f.Person.Email)
+                .RuleFor(c => c.Phone, f => f.Person.Phone)
+                .RuleFor(c => c.Address, f => new Address
+                {
+                    City = f.Address.City(),
+                    PostalCode = f.Address.ZipCode(),
+                    Province = f.Address.State(),
+                    Street = f.Address.StreetAddress()
+                }).Generate();
+
+            AddressRepository.Setup(x => x.GetAddressAsync(customer.Address!.Id)).ReturnsAsync(customer.Address);
+            AddressRepository.Setup(x => x.CreateAddressAsync(customer.Address!)).ReturnsAsync(customer.Address);
+            CustomerRepository.Setup(x => x.UpdateCustomerAsync(customer)).ReturnsAsync((Customer)null!);
+
+            // Act
+            var result = await CustomerService.UpdateCustomerAsync(customer);
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task UpdateCustomer_ReturnsNull_WhenAddressIsNotCreated()
+        {
+            // arrange
+            var customer = new Faker<Customer>()
+                .RuleFor(c => c.Id, f => f.IndexFaker)
+                .RuleFor(c => c.Name, f => f.Person.FullName)
+                .RuleFor(c => c.Email, f => f.Person.Email)
+                .RuleFor(c => c.Phone, f => f.Person.Phone)
+                .RuleFor(c => c.Address, f => new Address
+                {
+                    City = f.Address.City(),
+                    PostalCode = f.Address.ZipCode(),
+                    Province = f.Address.State(),
+                    Street = f.Address.StreetAddress()
+                }).Generate();
+
+            AddressRepository.Setup(x => x.GetAddressAsync(customer.Address!.Id)).ReturnsAsync((Address)null!);
+            AddressRepository.Setup(x => x.CreateAddressAsync(customer.Address!)).ReturnsAsync((Address)null!);
+
+            // Act
+            var result = await Assert.ThrowsAsync<Exception>(() => CustomerService.UpdateCustomerAsync(customer));
+            Assert.NotNull(result);
+            Assert.Equal("Failed to create address", result.Message);
+
+        }
+
+        [Fact]
+        public async Task GetCustomer_ReturnsNull_WhenCustomerDoesNotExist()
+        {
+            // Arrange
+            CustomerRepository.Setup(x => x.GetCustomerAsync(1)).ReturnsAsync((Customer)null!);
+
+            // Act
+            var result = await CustomerService.GetCustomerAsync(1);
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task GetCustomers_ReturnsEmptyList_WhenNoCustomersExist()
+        {
+            // Arrange
+            CustomerRepository.Setup(x => x.GetCustomersAsync(10, 1)).ReturnsAsync(new List<Customer>());
+
+            // Act
+            var result = await CustomerService.GetCustomersAsync(10, 1);
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task DeleteCustomer_ThrowsException_WhenCustomerDoesNotExist()
+        {
+            // Arrange
+            CustomerRepository.Setup(x => x.DeleteCustomerAsync(1)).ThrowsAsync(new ArgumentException("Customer not found", "id"));
+
+            // Act
+            var result = await Assert.ThrowsAsync<ArgumentException>(() => CustomerService.DeleteCustomerAsync(1));
+            Assert.NotNull(result);
+            Assert.Equal("Customer not found (Parameter 'id')", result.Message);
+        }
+
         protected Mock<ICustomerRepository> CustomerRepository => _customerRepository ??= new Mock<ICustomerRepository>();
         protected Mock<IAddressRepository> AddressRepository => _addressRepository ??= new Mock<IAddressRepository>();
         protected CustomerService CustomerService => _customerService ??= new CustomerService(CustomerRepository.Object, AddressRepository.Object);
@@ -196,11 +359,9 @@ namespace Assessment.Tests
             }
         }
 
-
         private CustomerService _customerService;
         private Mock<ICustomerRepository> _customerRepository;
         private Mock<IAddressRepository> _addressRepository;
         private IEnumerable<Customer> customers;
-
     }
 }

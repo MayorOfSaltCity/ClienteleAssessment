@@ -12,7 +12,7 @@ namespace Assessment.EntityFramework.Repositories
             _context = context;
         }
 
-        public async Task<Address> GetAddressAsync(int id)
+        public async Task<Address?> GetAddressAsync(int id)
         {
             return await _context.Addresses.FindAsync(id);
         }
@@ -22,23 +22,42 @@ namespace Assessment.EntityFramework.Repositories
             return await _context.Addresses.ToListAsync();
         }
 
-        public async Task<Address> CreateAddressAsync(Address address)
+        public async Task<Address?> CreateAddressAsync(Address address)
         {
+            ArgumentNullException.ThrowIfNull(address);
+
             _context.Addresses.Add(address);
             await _context.SaveChangesAsync();
-            return address;
+
+            // find the address
+            var returnAddress = await _context.Addresses.FindAsync(address.Id);
+            return returnAddress;
         }
 
-        public async Task<Address> UpdateAddressAsync(Address address)
+        public async Task<Address?> UpdateAddressAsync(Address address)
         {
-            _context.Entry(address).State = EntityState.Modified;
+            ArgumentNullException.ThrowIfNull(address);
+            var addressId = address.Id;
+            // find the address
+            var existingAddress = await _context.Addresses.FindAsync(addressId);
+            if (existingAddress == null)
+            {
+                throw new ArgumentException("Address not found", nameof(address));
+            }
+
+            // update the address
+            _context.Entry(existingAddress).CurrentValues.SetValues(address);
+
             await _context.SaveChangesAsync();
-            return address;
+
+            // get the updated address
+            var returnAddress = await _context.Addresses.FindAsync(addressId);
+            return returnAddress!;
         }
 
         public async Task DeleteAddressAsync(int id)
         {
-            var address = await _context.Addresses.FindAsync(id);
+            var address = await _context.Addresses.FindAsync(id) ?? throw new ArgumentException("Address not found", nameof(id));
             _context.Addresses.Remove(address);
             await _context.SaveChangesAsync();
         }

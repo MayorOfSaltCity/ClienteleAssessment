@@ -1,8 +1,40 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Customer Management";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to the Customer Management System</h1>
+    <p>Use this application to manage customer records in an SQLite database.</p>
+
+    <div class="mt-4">
+        <h2>Features</h2>
+        <ul class="list-group">
+            <li class="list-group-item">✔️ Create, Read, Update, and Delete customer records</li>
+            <li class="list-group-item">✔️ Manage customer information including name, email, and phone number</li>
+            <li class="list-group-item">✔️ All data is stored in an SQLite database using Entity Framework Core</li>
+        </ul>
+    </div>
+
+    <div class="mt-5">
+        <h3>How It Works</h3>
+        <p>This app allows you to perform basic CRUD operations on a <b>Customer</b> entity. You can:</p>
+        <ul class="list-unstyled">
+            <li><strong>Create</strong> new customer records</li>
+            <li><strong>Read</strong> customer details</li>
+            <li><strong>Update</strong> existing customer information</li>
+            <li><strong>Delete</strong> customers from the database</li>
+        </ul>
+    </div>
+
+    <div class="mt-5">
+        <h4>Start managing your customers now!</h4>
+        <p>Simply click the button below to begin.</p>
+        <a href="/Customers/Index" class="btn btn-primary btn-lg">Go to Customer Dashboard</a>
+    </div>
+</div>
+
+<hr>
+
+<div class="footer text-center">
+    <p>&copy; 2025 Customer Management System | Powered by ASP.NET Core & SQLite</p>
 </div>

@@ -44,30 +44,33 @@ namespace Assessment.EntityFramework.Controllers
             return View(customer);
         }
 
-        // GET: Customers/Create
         public IActionResult Create()
         {
-            //ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id");
             return View();
         }
 
-        // POST: Customers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Customer customer)
         {
             if (ModelState.IsValid)
             {
-                await _customerService.CreateCustomerAsync(customer);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _customerService.CreateCustomerAsync(customer);
+                    return RedirectToAction(nameof(Index));
+
+                }
+                catch (Exception e)
+                {
+                    ViewBag.ErrorMessage = e.Message;
+                    return View(customer);
+                }            
             }
-            //ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", customer.AddressId);
+
             return View(customer);
         }
 
-        // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,13 +83,10 @@ namespace Assessment.EntityFramework.Controllers
             {
                 return NotFound();
             }
-            //ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", customer.AddressId);
+
             return View(customer);
         }
 
-        // POST: Customers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Customer customer)
@@ -103,7 +103,7 @@ namespace Assessment.EntityFramework.Controllers
                     
                     await _customerService.UpdateCustomerAsync(customer);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException) // This exception is thrown when a concurrency violation is encountered while saving to the database
                 {
                     if (!await _customerService.CustomerExists(customer.Id))
                     {
@@ -114,13 +114,18 @@ namespace Assessment.EntityFramework.Controllers
                         throw;
                     }
                 }
+                catch (Exception e) // This exception is thrown when an error occurs while saving to the database
+                {
+                    ViewBag.ErrorMessage = e.Message;
+                    return View(customer);
+                }
+
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", customer.AddressId);
+
             return View(customer);
         }
 
-        // GET: Customers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,7 +142,6 @@ namespace Assessment.EntityFramework.Controllers
             return View(customer);
         }
 
-        // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

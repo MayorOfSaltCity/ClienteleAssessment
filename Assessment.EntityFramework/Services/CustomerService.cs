@@ -7,16 +7,17 @@ namespace Assessment.EntityFramework.Services
     {
         public async Task<Customer> CreateCustomerAsync(Customer customer)
         {
+            ArgumentNullException.ThrowIfNull(customer);
+
             // check if the customer has an address
             if (customer.Address != null)
             {
                 // check if the address is already in the database
-                var address = await addressRepository.GetAddressAsync(customer.Address.Id) ?? await addressRepository.SearchAddressAsync(customer.Address.SearchString());
-                if (address == null)
-                {                    
-                    // create the address
-                    address = await addressRepository.CreateAddressAsync(customer.Address);
-                }
+                var address = await addressRepository.GetAddressAsync(customer.Address.Id) ?? 
+                    await addressRepository.SearchAddressAsync(customer.Address.SearchString());
+                // create the address
+                address ??= await addressRepository.CreateAddressAsync(customer.Address) ??
+                    throw new Exception("Failed to create address");
                 // set the address id
                 customer.AddressId = address.Id;
             }
@@ -55,11 +56,9 @@ namespace Assessment.EntityFramework.Services
             {
                 // check if the address is already in the database
                 var address = await addressRepository.GetAddressAsync(customer.Address.Id);
-                if (address == null)
-                {
-                    // create the address
-                    address = await addressRepository.CreateAddressAsync(customer.Address);
-                }
+                // create the address
+                address ??= await addressRepository.CreateAddressAsync(customer.Address) ??
+                    throw new Exception("Failed to create address");
                 // set the address id
                 customer.AddressId = address.Id;
             }
