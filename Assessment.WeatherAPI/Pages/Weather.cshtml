@@ -10,7 +10,7 @@
 </form>
 
 <div>
-@if (Model.WeatherData != null)
+@if (Model.WeatherData != null && Model.WeatherData.MainWeatherData != null)
     {
         <h2>@Model.WeatherData.Name</h2>
         <p>Temperature: @Model.WeatherData.MainWeatherData.Temperature</p>
@@ -22,5 +22,10 @@
     else
     {
         <p>City not found</p>
+        if (Model.ErrorMessage != null)
+        {
+            <br />
+            <p>@Model.ErrorMessage</p>
+        }
     }
 </div>

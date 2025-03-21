@@ -13,7 +13,7 @@ namespace Assessment.WeatherAPI.Services
             _weatherRepository = weatherRepository;
         }
 
-        public async Task<WeatherData> GetWeatherAsync(string searchCity)
+        public async Task<WeatherData?> GetWeatherAsync(string searchCity)
         {
             return await _weatherRepository.GetWeatherAsync(searchCity);
         }
